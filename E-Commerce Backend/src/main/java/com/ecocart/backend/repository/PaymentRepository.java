@@ -1,6 +1,6 @@
-package com.echocart.backend.repository;
+package com.ecocart.backend.repository;
 
-import com.echocart.backend.entity.Payment;
+import com.ecocart.backend.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {

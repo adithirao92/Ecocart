@@ -1,10 +1,10 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.Cart;
-import com.echocart.backend.entity.Product;
-import com.echocart.backend.repository.CartRepository;
-import com.echocart.backend.repository.UserRepository;
-import com.echocart.backend.repository.ProductRepository;
+import com.ecocart.backend.entity.Cart;
+import com.ecocart.backend.entity.Product;
+import com.ecocart.backend.repository.CartRepository;
+import com.ecocart.backend.repository.UserRepository;
+import com.ecocart.backend.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

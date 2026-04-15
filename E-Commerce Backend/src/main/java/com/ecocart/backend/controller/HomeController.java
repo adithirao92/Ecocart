@@ -1,4 +1,4 @@
-package com.echocart.backend.controller;
+package com.ecocart.backend.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +11,7 @@ public class HomeController {
     @GetMapping("/")
     public Map<String, Object> home() {
         return Map.of(
-            "message", "EchoCart Backend API is running!",
+            "message", "ecocart Backend API is running!",
             "status", "success",
             "endpoints", Map.of(
                 "products", "/api/products",

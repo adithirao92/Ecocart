@@ -1,4 +1,4 @@
-package com.echocart.backend.entity;
+package com.ecocart.backend.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

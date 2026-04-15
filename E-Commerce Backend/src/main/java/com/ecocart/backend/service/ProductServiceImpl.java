@@ -1,7 +1,7 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.Product;
-import com.echocart.backend.repository.ProductRepository;
+import com.ecocart.backend.entity.Product;
+import com.ecocart.backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

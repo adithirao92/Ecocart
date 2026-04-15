@@ -1,6 +1,6 @@
-package com.echocart.backend.repository;
+package com.ecocart.backend.repository;
 
-import com.echocart.backend.entity.Product;
+import com.ecocart.backend.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {

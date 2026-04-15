@@ -1,8 +1,8 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.Payment;
-import com.echocart.backend.repository.PaymentRepository;
-import com.echocart.backend.repository.OrderRepository;
+import com.ecocart.backend.entity.Payment;
+import com.ecocart.backend.repository.PaymentRepository;
+import com.ecocart.backend.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,6 +1,6 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.Order;
+import com.ecocart.backend.entity.Order;
 
 public interface OrderService {
     Order createOrder(Order order);

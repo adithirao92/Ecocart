@@ -1,7 +1,7 @@
-package com.echocart.backend.controller;
+package com.ecocart.backend.controller;
 
-import com.echocart.backend.entity.Cart;
-import com.echocart.backend.service.CartService;
+import com.ecocart.backend.entity.Cart;
+import com.ecocart.backend.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

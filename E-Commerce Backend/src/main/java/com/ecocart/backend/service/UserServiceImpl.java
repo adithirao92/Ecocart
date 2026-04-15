@@ -1,11 +1,11 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.User;
-import com.echocart.backend.entity.Order;
-import com.echocart.backend.entity.Product;
-import com.echocart.backend.repository.UserRepository;
-import com.echocart.backend.repository.OrderRepository;
-import com.echocart.backend.repository.ProductRepository;
+import com.ecocart.backend.entity.User;
+import com.ecocart.backend.entity.Order;
+import com.ecocart.backend.entity.Product;
+import com.ecocart.backend.repository.UserRepository;
+import com.ecocart.backend.repository.OrderRepository;
+import com.ecocart.backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

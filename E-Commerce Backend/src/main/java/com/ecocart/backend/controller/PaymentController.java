@@ -1,7 +1,7 @@
-package com.echocart.backend.controller;
+package com.ecocart.backend.controller;
 
-import com.echocart.backend.entity.Payment;
-import com.echocart.backend.service.PaymentService;
+import com.ecocart.backend.entity.Payment;
+import com.ecocart.backend.service.PaymentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

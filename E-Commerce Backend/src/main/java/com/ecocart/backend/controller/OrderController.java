@@ -1,8 +1,8 @@
-package com.echocart.backend.controller;
+package com.ecocart.backend.controller;
 
-import com.echocart.backend.entity.Order;
-import com.echocart.backend.service.OrderService;
-import com.echocart.backend.repository.OrderRepository;
+import com.ecocart.backend.entity.Order;
+import com.ecocart.backend.service.OrderService;
+import com.ecocart.backend.repository.OrderRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

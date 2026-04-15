@@ -1,4 +1,4 @@
-package com.echocart.backend;
+package com.ecocart.backend;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @SpringBootApplication
-public class EchoCart
+public class ecocart
 {
     public static void main( String[] args )
     {
-        SpringApplication.run(EchoCart.class, args);
+        SpringApplication.run(ecocart.class, args);
     }
 
     @Bean

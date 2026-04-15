@@ -1,6 +1,6 @@
-package com.echocart.backend.repository;
+package com.ecocart.backend.repository;
 
-import com.echocart.backend.entity.Cart;
+import com.ecocart.backend.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

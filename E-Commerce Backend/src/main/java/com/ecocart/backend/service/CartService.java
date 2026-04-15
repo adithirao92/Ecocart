@@ -1,6 +1,6 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.Cart;
+import com.ecocart.backend.entity.Cart;
 import java.util.List;
 
 public interface CartService {

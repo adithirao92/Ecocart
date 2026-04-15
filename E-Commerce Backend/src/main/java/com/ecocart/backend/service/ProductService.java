@@ -1,6 +1,6 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.Product;
+import com.ecocart.backend.entity.Product;
 import java.util.List;
 
 public interface ProductService {

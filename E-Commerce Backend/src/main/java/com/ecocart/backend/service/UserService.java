@@ -1,7 +1,7 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.User;
-import com.echocart.backend.entity.Order;
+import com.ecocart.backend.entity.User;
+import com.ecocart.backend.entity.Order;
 import java.util.List;
 import java.util.Map;
 

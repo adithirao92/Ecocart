@@ -1,6 +1,6 @@
-package com.echocart.backend.service;
+package com.ecocart.backend.service;
 
-import com.echocart.backend.entity.Payment;
+import com.ecocart.backend.entity.Payment;
 
 public interface PaymentService {
     Payment processPayment(Payment payment);
