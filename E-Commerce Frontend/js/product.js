@@ -205,6 +205,11 @@ function addProductToGrid(product, animate = true) {
     if (targetGrid) {
         const productCard = createProductCard(product);
         targetGrid.appendChild(productCard);
+        setTimeout(() => {
+    if (window.loadReviews) {
+        loadReviews(product.id);
+    }
+}, 100);
         console.log('Product card added to grid');
         
         if (animate) {
@@ -261,30 +266,54 @@ const ecoClass = ecoScore >= 7 ? 'eco-score-high'
         <button class="btn btn-custom btn-sm" onclick="showLoginRequired()">Add to Cart</button>
     `;
     
-    col.innerHTML = `
-    <div class="card product-card h-100">
-        <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}" style="object-fit:cover; width:100%; height:200px;">
-        
-        <div class="card-body p-3">
-            <h6 class="card-title mb-2">${product.name}</h6>
+col.innerHTML = `
+<div class="card product-card h-100">
+    <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}" style="object-fit:cover; width:100%; height:200px;">
+    
+    <div class="card-body p-3">
+        <h6 class="card-title mb-2">${product.name}</h6>
 
-            <!-- ✅ ALWAYS SHOW ECO BADGE -->
-            <span class="eco-badge ${ecoClass}">
-                🌿 ${ecoScore}/10
+        <span class="eco-badge ${ecoClass}">
+            🌿 ${ecoScore}/10
+        </span>
+
+        <p class="card-text text-muted small mb-2">${product.description}</p>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="product-price fw-bold">
+                ₹${typeof product.price === 'number' ? product.price.toLocaleString() : product.price}
             </span>
-
-            <p class="card-text text-muted small mb-2">${product.description}</p>
-
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="product-price fw-bold">
-                    ₹${typeof product.price === 'number' ? product.price.toLocaleString() : product.price}
-                </span>
-                ${addToCartButton}
-            </div>
-
-            ${adminButtons}
+            ${addToCartButton}
         </div>
+
+        ${adminButtons}
+
+        <!-- 🔥 REVIEW SECTION PER PRODUCT -->
+        <div class="mt-3 border-top pt-2">
+            <h6>Reviews</h6>
+
+            <div id="review-list-${product.id}"></div>
+
+            <select id="rating-${product.id}" class="form-select mb-1">
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
+
+            <textarea id="comment-${product.id}" 
+                      class="form-control mb-1"
+                      placeholder="Write review..."></textarea>
+
+            <button class="btn btn-success btn-sm"
+                    onclick="submitReview(${product.id})">
+                Submit
+            </button>
+        </div>
+
     </div>
+</div>
 `;
     
     return col;

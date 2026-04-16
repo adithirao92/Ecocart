@@ -200,4 +200,80 @@ if (searchBar) {
     });
 }
 
+// ================= REVIEW FEATURE =================
 
+// Load Reviews
+window.loadReviews = async function(productId) {
+    try {
+        const response = await fetch(`${API_BASE}/reviews/product/${productId}`);
+        const reviews = await response.json();
+
+        const container = document.getElementById(`review-list-${productId}`);
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        if (!reviews.length) {
+            container.innerHTML = "<small>No reviews</small>";
+            return;
+        }
+
+        reviews.forEach(r => {
+            const div = document.createElement("div");
+            div.className = "border rounded p-1 mb-1";
+
+            div.innerHTML = `
+                ⭐ ${r.score}/5 - ${r.comment}
+            `;
+
+            container.appendChild(div);
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+// Submit Review
+window.submitReview = async function(productId) {
+    const score = document.getElementById(`rating-${productId}`).value;
+    const comment = document.getElementById(`comment-${productId}`).value;
+
+    if (!comment.trim()) {
+        alert("Enter review!");
+        return;
+    }
+
+    const reviewData = {
+        productId: productId,
+        score: parseInt(score),
+        comment: comment,
+        customerId: 1
+    };
+
+    try {
+        const response = await fetch(`${API_BASE}/reviews`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reviewData)
+        });
+
+        if (response.ok) {
+            alert("Review added!");
+            document.getElementById(`comment-${productId}`).value = '';
+            loadReviews(productId);
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+// Auto load reviews when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        loadReviews(1); // using test product ID
+    }, 1000);
+});
