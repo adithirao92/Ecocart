@@ -47,7 +47,7 @@ class CartManager {
 
         try {
             // First, get product details from backend to ensure we have correct data
-            const productResponse = await fetch(`http://13.51.13.143:8080/api/products/${productId}`);
+            const productResponse = await fetch(`http://localhost:8080/api/products/${productId}`);
             const productData = await productResponse.json();
             
             let productDetails = {
@@ -70,7 +70,7 @@ class CartManager {
             }
 
             // Add to backend
-            const backendResponse = await fetch('http://13.51.13.143:8080/api/cart', {
+            const backendResponse = await fetch('http://localhost:8080/api/cart', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -134,7 +134,7 @@ class CartManager {
         
         try {
             // Find cart item to get cartId
-            const cartResponse = await fetch(`http://13.51.13.143:8080/api/cart/user/${userId}`);
+            const cartResponse = await fetch(`http://localhost:8080/api/cart/user/${userId}`);
             const cartData = await cartResponse.json();
             
             if (cartData.success) {
@@ -142,7 +142,7 @@ class CartManager {
                 
                 if (cartItem) {
                     // Remove from backend
-                    const deleteResponse = await fetch(`http://13.51.13.143:8080/api/cart/${cartItem.cartId}`, {
+                    const deleteResponse = await fetch(`http://localhost:8080/api/cart/${cartItem.cartId}`, {
                         method: 'DELETE'
                     });
                     
@@ -207,13 +207,13 @@ class CartManager {
             
             try {
                 // Get all cart items and remove them
-                const cartResponse = await fetch(`http://13.51.13.143:8080/api/cart/user/${userId}`);
+                const cartResponse = await fetch(`http://localhost:8080/api/cart/user/${userId}`);
                 const cartData = await cartResponse.json();
                 
                 if (cartData.success && cartData.cartItems) {
                     // Remove each item from backend
                     for (const item of cartData.cartItems) {
-                        await fetch(`http://13.51.13.143:8080/api/cart/${item.cartId}`, {
+                        await fetch(`http://localhost:8080/api/cart/${item.cartId}`, {
                             method: 'DELETE'
                         });
                     }
@@ -240,7 +240,7 @@ class CartManager {
         }
 
         try {
-            const response = await fetch(`http://13.51.13.143:8080/api/cart/user/${userId}`, {
+            const response = await fetch(`http://localhost:8080/api/cart/user/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -254,7 +254,7 @@ class CartManager {
                 const cartItems = await Promise.all(data.cartItems.map(async (item) => {
                     try {
                         // Get product details
-                        const productResponse = await fetch(`http://13.51.13.143:8080/api/products/${item.productId}`);
+                        const productResponse = await fetch(`http://localhost:8080/api/products/${item.productId}`);
                         const productData = await productResponse.json();
                         
                         if (productData.success) {
@@ -447,3 +447,4 @@ window.cartManager = cartManager; // Make globally accessible
 function addToCart(cartItem) {
     cartManager.addToCart(cartItem);
 }
+

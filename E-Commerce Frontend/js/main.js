@@ -1,5 +1,5 @@
 // Utility functions
-const API_BASE = 'http://13.51.13.143:8080/api';
+const API_BASE = 'http://localhost:8080/api';
 
 const apiRequest = async (url, options = {}) => {
     const response = await fetch(url, {

@@ -100,7 +100,7 @@ async function loadUsers() {
     showLoading(true);
     const localUserId = localStorage.getItem('userId');
     try {
-        const response = await fetch('http://13.51.13.143:8080/api/users/admin/allusers?adminUserId=' + localUserId);
+        const response = await fetch('http://localhost:8080/api/users/admin/allusers?adminUserId=' + localUserId);
         if (response.ok) {
             const data = await response.json();
             console.log('Users loaded:', data);
@@ -271,7 +271,7 @@ async function loadProducts() {
     showLoading(true);
     
     try {
-        const response = await fetch('http://13.51.13.143:8080/api/products');
+        const response = await fetch('http://localhost:8080/api/products');
         if (response.ok) {
             const data = await response.json();
             console.log('Loaded products:', data);
@@ -339,7 +339,7 @@ async function addProduct(productData) {
     showLoading(true);
     
     try {
-        const response = await fetch('http://13.51.13.143:8080/api/products', {
+        const response = await fetch('http://localhost:8080/api/products', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -367,7 +367,7 @@ async function editProduct(productId) {
     
     console.log("Product ID:"+productId)
 
-    await fetch(`http://13.51.13.143:8080/api/products/${productId}`)
+    await fetch(`http://localhost:8080/api/products/${productId}`)
         .then(res => res.json())
         .then(product => {
             populateEditForm(product);
@@ -402,7 +402,7 @@ function updateProduct(productData) {
     showLoading(true);
     
     // In real implementation, send to: /api/admin/products/{id}
-    fetch(`http://13.51.13.143:8080/api/products/${productData.productId}`, {
+    fetch(`http://localhost:8080/api/products/${productData.productId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -443,7 +443,7 @@ function deleteProduct(productId) {
     showLoading(true);
     
     // In real implementation, send to: /api/admin/products/{id}
-    fetch(`http://13.51.13.143:8080/api/products/${productId}`, {
+    fetch(`http://localhost:8080/api/products/${productId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('userToken')}`
@@ -483,7 +483,7 @@ async function loadOrders() {
     showLoading(true);
     
     try {
-        const response = await fetch('http://13.51.13.143:8080/api/admin/orders');
+        const response = await fetch('http://localhost:8080/api/admin/orders');
         if (response.ok) {
             const orders = await response.json();
             displayOrders(orders);
@@ -565,7 +565,7 @@ function displayOrders(orders) {
 // Edit user function
 function editUser(userId) {
     // Find user data (in real app, fetch from API)
-    fetch(`http://13.51.13.143:8080/api/admin/users/${userId}`)
+    fetch(`http://localhost:8080/api/admin/users/${userId}`)
         .then(res => res.json())
         .then(user => {
             document.getElementById('editUserId').value = user.id;
@@ -587,7 +587,7 @@ function editUser(userId) {
 // Update user function
 async function updateUser(userData) {
     try {
-        const response = await fetch(`http://13.51.13.143:8080/api/admin/users/${userData.id}`, {
+        const response = await fetch(`http://localhost:8080/api/admin/users/${userData.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -612,7 +612,7 @@ async function updateUser(userData) {
 // Update user role
 async function updateUserRole(userId, newRole) {
     try {
-        const response = await fetch(`http://13.51.13.143:8080/api/admin/users/${userId}/role`, {
+        const response = await fetch(`http://localhost:8080/api/admin/users/${userId}/role`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -637,7 +637,7 @@ async function deleteUser(userId) {
     if (!confirm('Are you sure you want to delete this user?')) return;
     
     try {
-        const response = await fetch(`http://13.51.13.143:8080/api/admin/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/admin/users/${userId}`, {
             method: 'DELETE'
         });
         
@@ -678,7 +678,7 @@ function getStatusBadge(status) {
 // View product details function
 function viewProductDetails(productId) {
     console.log('Viewing details for product ID:', productId);
-    fetch(`http://13.51.13.143:8080/api/products/${productId}`)
+    fetch(`http://localhost:8080/api/products/${productId}`)
         .then(res => res.json())
         .then(product => {
             displayProductDetails(product);

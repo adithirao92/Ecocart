@@ -69,7 +69,7 @@ async function loadProducts() {
     // Simulate API call
     setTimeout(async () => {
         // Use the API_BASE for consistency
-        const API_BASE = 'http://13.51.13.143:8080/api';
+        const API_BASE = 'http://localhost:8080/api';
         await fetch(`${API_BASE}/products`)
         .then(res => res.json())
         .then(data => {
@@ -151,7 +151,7 @@ async function loadUserOrders() {
     
     try {
         // Use the API_BASE from main.js for consistency
-        const API_BASE = 'http://13.51.13.143:8080/api';
+        const API_BASE = 'http://localhost:8080/api';
         const response = await fetch(`${API_BASE}/orders/user/${userId}`);
         if (response.ok) {
             const data = await response.json();
