@@ -133,6 +133,48 @@ public class UserController {
 
     // ==================== ADMIN ONLY ENDPOINTS ====================
 
+    @GetMapping("/admin/pending-vendors")
+public ResponseEntity<Map<String, Object>> getPendingVendors(
+        @RequestParam Long adminUserId) {
+
+    if (!isAdmin(adminUserId)) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("success", false, "message", "Admin access required"));
+    }
+
+    try {
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "vendors", userService.getPendingVendors()
+        ));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Failed to get vendors"));
+    }
+}
+
+@PutMapping("/admin/approve-vendor/{vendorId}")
+public ResponseEntity<Map<String, Object>> approveVendor(
+        @PathVariable Long vendorId,
+        @RequestParam Long adminUserId) {
+
+    if (!isAdmin(adminUserId)) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("success", false, "message", "Admin access required"));
+    }
+
+    try {
+        userService.approveVendor(vendorId);
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Vendor approved successfully"
+        ));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("success", false, "message", e.getMessage()));
+    }
+}
+
     // Helper method to verify admin access
     private boolean isAdmin(Long userId) {
         try {

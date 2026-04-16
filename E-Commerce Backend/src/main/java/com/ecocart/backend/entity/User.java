@@ -11,8 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 
     public enum Role {
-        CUSTOMER, ADMIN
-    }
+    CUSTOMER, VENDOR, ADMIN
+}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,16 +37,33 @@ public class User {
     @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
     private String email;
+    
+    @Column(nullable = false)
+    private boolean approved = true;
 
+    public boolean isApproved() {
+    return approved;
+}
+
+public void setApproved(boolean approved) {
+    this.approved = approved;
+}
     // Constructors
     public User() {}
 
     public User(String username, String email, String password, Role role) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role != null ? role : Role.CUSTOMER;
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.role = role != null ? role : Role.CUSTOMER;
+
+    // Vendors need approval
+    if (this.role == Role.VENDOR) {
+        this.approved = false;
+    } else {
+        this.approved = true;
     }
+}
 
     // Getters and Setters
     public Long getUserId() { return userId; }

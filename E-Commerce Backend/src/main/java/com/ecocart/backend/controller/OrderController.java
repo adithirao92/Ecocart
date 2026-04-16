@@ -34,6 +34,32 @@ public class OrderController {
         }
     }
 
+    @PostMapping("/checkout/{userId}")
+public ResponseEntity<Map<String, Object>> checkout(
+        @PathVariable Long userId,
+        @RequestBody Map<String, Object> payload) {
+
+    try {
+        // STEP 1: (Later) get cart items
+        // STEP 2: validate stock
+        // STEP 3: apply promo if exists
+        // STEP 4: create order
+        // STEP 5: process payment
+        // STEP 6: generate carbon report
+        // STEP 7: clear cart
+
+        Map<String, Object> result = orderService.checkout(userId, payload);
+return ResponseEntity.ok(result);
+
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "success", false,
+                        "message", e.getMessage()
+                ));
+    }
+}
+
     @GetMapping("/{orderId}")
     public ResponseEntity<Map<String, Object>> getOrderDetails(@PathVariable Long orderId) {
         try {

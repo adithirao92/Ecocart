@@ -23,4 +23,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Admin queries
     List<User> findByRole(User.Role role);
     Long countByRole(User.Role role);
+    List<User> findByRoleAndApproved(User.Role role, boolean approved);
 }

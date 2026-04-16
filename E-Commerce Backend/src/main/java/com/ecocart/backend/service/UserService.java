@@ -19,4 +19,6 @@ public interface UserService {
     User updateUserRole(Long userId, User.Role newRole);
     void deleteUser(Long userId);
     List<User> getUsersByRole(User.Role role);
+    List<User> getPendingVendors();
+    void approveVendor(Long vendorId);
 }
