@@ -230,4 +230,23 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersByRole(User.Role role) {
         return userRepository.findByRole(role);
     }
+
+    @Override
+public List<User> getPendingVendors() {
+    return userRepository.findByRoleAndApproved(User.Role.VENDOR, false);
+}
+
+@Override
+public void approveVendor(Long vendorId) {
+
+    User user = userRepository.findById(vendorId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    if (user.getRole() != User.Role.VENDOR) {
+        throw new RuntimeException("User is not a vendor");
+    }
+
+    user.setApproved(true);
+    userRepository.save(user);
+}
 }
