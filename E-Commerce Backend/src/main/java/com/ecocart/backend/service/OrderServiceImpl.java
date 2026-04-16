@@ -108,7 +108,9 @@ public Map<String, Object> checkout(Long userId, Map<String, Object> payload) {
     Order savedOrder = orderRepository.save(order);
 
     // STEP 4: Carbon calculation
-    double co2 = carbonCalculator.calculate("STANDARD", 2.0, 10.0);
+    // double co2 = carbonCalculator.calculate("STANDARD", 2.0, 10.0);
+    var report = carbonCalculator.calculate(savedOrder.getOrderId(), "STANDARD", 2.0, 10.0);
+    double co2 = report.getEstimatedCO2();
 
     return Map.of(
             "success", true,

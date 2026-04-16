@@ -1,33 +1,49 @@
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\config\CorsConfig.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\controller\CartController.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\controller\HomeController.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\controller\OrderController.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\controller\PaymentController.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\controller\ProductController.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\controller\UserController.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\ecocart.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\entity\Cart.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\entity\Order.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\entity\Payment.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\entity\Product.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\entity\User.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\repository\CartRepository.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\repository\OrderRepository.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\repository\PaymentRepository.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\repository\ProductRepository.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\repository\UserRepository.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\CarbonFootprintCalculator.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\CartService.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\CartServiceImpl.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\OrderService.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\OrderServiceImpl.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\PaymentService.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\PaymentServiceImpl.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\ProductService.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\ProductServiceImpl.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\UserService.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\service\UserServiceImpl.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\strategy\EcoShippingStrategy.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\strategy\ExpressShippingStrategy.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\strategy\ShippingCarbonStrategy.java
-C:\Adithi\PESU\Sem 6\OOAD\Ecocart_Mini\Ecocart\E-Commerce Backend\src\main\java\com\ecocart\backend\strategy\StandardShippingStrategy.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/config/CorsConfig.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/CarbonController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/CartController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/HomeController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/OrderController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/OrderObserver.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/PaymentController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/ProductController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/PromoController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/ReviewController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/SupportTicketController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/controller/UserController.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/ecocart.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/CarbonReport.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/Cart.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/Order.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/Payment.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/Product.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/PromoCode.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/Review.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/SupportTicket.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/entity/User.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/CarbonReportRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/CartRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/OrderRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/PaymentRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/ProductRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/PromoCodeRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/ReviewRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/SupportTicketRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/repository/UserRepository.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/CarbonFootprintCalculator.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/CartService.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/CartServiceImpl.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/DiscountEngine.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/OrderService.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/OrderServiceImpl.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/PaymentService.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/PaymentServiceImpl.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/ProductService.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/ProductServiceImpl.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/ReviewService.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/ReviewServiceImpl.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/UserService.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/service/UserServiceImpl.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/strategy/EcoShippingStrategy.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/strategy/ExpressShippingStrategy.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/strategy/ShippingCarbonStrategy.java
+/Users/sukhineshgopalan/Downloads/OOAD_Eco/Ecocart/E-Commerce Backend/src/main/java/com/ecocart/backend/strategy/StandardShippingStrategy.java

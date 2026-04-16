@@ -10,18 +10,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "users")
 public class User {
 
-<<<<<<< HEAD
-    public enum Role 
-    {
-    CUSTOMER,
-    ADMIN,
-    VENDOR
-    }
-=======
     public enum Role {
-    CUSTOMER, VENDOR, ADMIN
-}
->>>>>>> origin/feature/order-flow
+        CUSTOMER, VENDOR, ADMIN
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,35 +41,22 @@ public class User {
     @Column(nullable = false)
     private boolean approved = true;
 
-    @Column(nullable = false)
-    private boolean approved = true;
-
-    public boolean isApproved() { return approved; }
-    public void setApproved(boolean approved) { this.approved = approved; } 
-
-    public boolean isApproved() {
-    return approved;
-}
-
-public void setApproved(boolean approved) {
-    this.approved = approved;
-}
     // Constructors
     public User() {}
 
     public User(String username, String email, String password, Role role) {
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.role = role != null ? role : Role.CUSTOMER;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role != null ? role : Role.CUSTOMER;
 
-    // Vendors need approval
-    if (this.role == Role.VENDOR) {
-        this.approved = false;
-    } else {
-        this.approved = true;
+        // Vendors need approval
+        if (this.role == Role.VENDOR) {
+            this.approved = false;
+        } else {
+            this.approved = true;
+        }
     }
-}
 
     // Getters and Setters
     public Long getUserId() { return userId; }
@@ -95,4 +73,7 @@ public void setApproved(boolean approved) {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public boolean isApproved() { return approved; }
+    public void setApproved(boolean approved) { this.approved = approved; } 
 }
