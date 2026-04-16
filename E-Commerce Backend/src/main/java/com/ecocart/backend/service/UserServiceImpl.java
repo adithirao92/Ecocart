@@ -116,8 +116,15 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> userOpt = userRepository.findByUsernameOrEmail(identifier);
 
-        if (userOpt.isPresent() && password.equals(userOpt.get().getPassword())) {
-            return userOpt.get();
+        if (userOpt.isPresent() && password.equals(userOpt.get().getPassword())) 
+            {
+            User user = userOpt.get();
+            // 🔥 VENDOR APPROVAL CHECK
+            if (user.getRole() == User.Role.VENDOR && !user.isApproved()) 
+                {
+                throw new RuntimeException("Vendor not approved yet");
+            }
+            return user;
         }
 
         throw new RuntimeException("Invalid credentials");

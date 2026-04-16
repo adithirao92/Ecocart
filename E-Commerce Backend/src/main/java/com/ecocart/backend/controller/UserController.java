@@ -111,6 +111,27 @@ public class UserController {
         }
     }
 
+    //vendorrrrrrrr
+    @PostMapping("/register/vendor")
+    public ResponseEntity<Map<String, Object>> registerVendor(@RequestBody Map<String, String> payload) {
+
+    User user = new User();
+    user.setUsername(payload.get("name"));
+    user.setEmail(payload.get("email"));
+    user.setPassword(payload.get("password"));
+
+    user.setRole(User.Role.VENDOR);
+    user.setApproved(false);
+
+    User savedUser = userService.registerUser(user);
+
+    return ResponseEntity.ok(Map.of(
+            "success", true,
+            "message", "Vendor registered. Awaiting approval.",
+            "userId", savedUser.getUserId()
+    ));
+}
+
     // GET USER PROFILE
     @GetMapping("/{userId}")
     public ResponseEntity<Map<String, Object>> getUserProfile(@PathVariable Long userId) {
@@ -298,6 +319,21 @@ public class UserController {
                     .body(Map.of("success", false, "message", e.getMessage()));
         }
     }
+// vendorrrrrrr
+    @PutMapping("/admin/approve-vendor/{id}")
+    public ResponseEntity<?> approveVendor(@PathVariable Long id) {
+
+    User user = userService.getUserProfile(id);
+
+    if (user.getRole() != User.Role.VENDOR) {
+        return ResponseEntity.badRequest().body("Not a vendor");
+    }
+
+    user.setApproved(true);
+    userService.updateUser(user);
+
+    return ResponseEntity.ok("Vendor approved");
+}
 
     // DELETE USER (Admin Only)
     @DeleteMapping("/admin/delete-user/{userId}")

@@ -10,8 +10,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "users")
 public class User {
 
-    public enum Role {
-        CUSTOMER, ADMIN
+    public enum Role 
+    {
+    CUSTOMER,
+    ADMIN,
+    VENDOR
     }
 
     @Id
@@ -37,6 +40,12 @@ public class User {
     @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private boolean approved = true;
+
+    public boolean isApproved() { return approved; }
+    public void setApproved(boolean approved) { this.approved = approved; } 
 
     // Constructors
     public User() {}
