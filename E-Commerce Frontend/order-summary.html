@@ -136,6 +136,24 @@
                                 </div>
                             </div>
 
+                            <!-- 🌍 Carbon Footprint Report -->
+<div class="carbon-card mt-3 p-3 border rounded" id="carbon-report">
+
+    <h6>🌍 Carbon Footprint Report</h6>
+
+    <p>Estimated CO₂: <strong id="co2-value">--</strong> kg</p>
+
+    <p>Impact Rating: <span id="co2-rating" class="badge">--</span></p>
+
+    <small>Choose Eco shipping at checkout to reduce your footprint!</small>
+
+</div>
+<div class="input-group mb-3 mt-3">
+    <input type="text" id="promo-input" class="form-control" placeholder="Enter Promo Code (e.g., ECO10)">
+    <button type="button" class="btn btn-outline-success" onclick="applyPromo()">Apply</button>
+</div>
+<p id="promo-message" class="text-success small d-none"></p>
+
                             <div class="border-top pt-3 mb-3">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Subtotal:</span>
@@ -149,6 +167,10 @@
                                     <span>Tax:</span>
                                     <span id="order-tax">₹0.00</span>
                                 </div>
+                                <div class="d-flex justify-content-between text-success d-none" id="discount-row">
+    <span>Discount:</span>
+    <span id="discount-amount">-₹0</span>
+</div>
                                 <hr>
                                 <div class="d-flex justify-content-between fw-bold fs-5">
                                     <span>Total:</span>
@@ -191,245 +213,224 @@
 
     <!-- Custom JavaScript -->
     <script>
-        const API_BASE = 'http://localhost:8081/api';
-        let orderItems = [];
-        let orderTotal = 0;
+const API_BASE = 'http://localhost:8080/api';
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in
-            const userId = localStorage.getItem('userId');
-            const username = localStorage.getItem('username');
-            const userEmail = localStorage.getItem('userEmail');
+let orderItems = [];
+let orderTotal = 0;
+let discount = 0; // ✅ NEW
 
-            if (!userId) {
-                alert('Please login to continue with checkout');
-                window.location.href = 'index.html';
-                return;
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+    const userEmail = localStorage.getItem('userEmail');
 
-            // Pre-fill customer information
-            if (username) document.getElementById('customerName').value = username;
-            if (userEmail) document.getElementById('customerEmail').value = userEmail;
+    if (!userId) {
+        alert('Please login to continue with checkout');
+        window.location.href = 'index.html';
+        return;
+    }
 
-            // Load order items from cart
-            loadOrderItems();
+    if (username) document.getElementById('customerName').value = username;
+    if (userEmail) document.getElementById('customerEmail').value = userEmail;
 
-            // Setup form submission
-            document.getElementById('checkout-form').addEventListener('submit', handleCheckout);
+    loadOrderItems();
 
-            // Setup payment method change
-            document.getElementById('paymentMethod').addEventListener('change', handlePaymentMethodChange);
+    document.getElementById('checkout-form').addEventListener('submit', handleCheckout);
+    document.getElementById('paymentMethod').addEventListener('change', handlePaymentMethodChange);
+});
+
+
+// 🔥 PROMO FUNCTION (NEW)
+function applyPromo() {
+    const code = document.getElementById('promo-input').value.trim().toUpperCase();
+    const msg = document.getElementById('promo-message');
+
+    if (code === "ECO10") {
+        discount = 0.10;
+        msg.textContent = "🌱 Eco discount applied (10%)!";
+    } 
+    else if (code === "SAVE20") {
+        discount = 0.20;
+        msg.textContent = "💸 20% discount applied!";
+    } 
+    else {
+        discount = 0;
+        msg.textContent = "❌ Invalid promo code";
+    }
+
+    msg.classList.remove("d-none");
+
+    displayOrderItems(); // 🔥 Recalculate totals
+}
+
+
+// Load cart
+async function loadOrderItems() {
+    const userId = localStorage.getItem('userId');
+    
+    try {
+        const response = await fetch(`${API_BASE}/cart/user/${userId}`);
+        const data = await response.json();
+        
+        if (data.success && data.cartItems.length > 0) {
+            const itemsWithDetails = await Promise.all(data.cartItems.map(async (item) => {
+                try {
+                    const productResponse = await fetch(`${API_BASE}/products/${item.productId}`);
+                    const productData = await productResponse.json();
+                    
+                    if (productData.success) {
+                        return {
+                            ...item,
+                            name: productData.product.name,
+                            price: productData.product.price,
+                            imageUrl: productData.product.imageUrl,
+                            ecoScore: productData.product.price > 5000 ? 4 : 8
+                        };
+                    }
+                } catch (error) {}
+
+                return {
+                    ...item,
+                    name: `Product ${item.productId}`,
+                    price: 100,
+                    imageUrl: '',
+                    ecoScore: 5
+                };
+            }));
+            
+            orderItems = itemsWithDetails;
+            displayOrderItems();
+        } else {
+            showEmptyOrder();
+        }
+    } catch (error) {
+        console.error('Error loading cart:', error);
+    }
+}
+
+
+// 🔥 MAIN CALCULATION (UPDATED)
+function displayOrderItems() {
+    document.getElementById('order-loading').style.display = 'none';
+    document.getElementById('order-items').style.display = 'block';
+    
+    const tbody = document.getElementById('order-items-body');
+    tbody.innerHTML = '';
+    
+    let subtotal = 0;
+    
+    orderItems.forEach(item => {
+        const itemSubtotal = item.price * item.quantity;
+        subtotal += itemSubtotal;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <div class="d-flex align-items-center">
+                    <img src="${item.imageUrl}" style="width:50px;height:50px;">
+                    <div><h6>${item.name}</h6></div>
+                </div>
+            </td>
+            <td>${item.quantity}</td>
+            <td>₹${item.price}</td>
+            <td>₹${itemSubtotal}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    updateCarbonReport();
+
+    const shipping = 50;
+    const tax = Math.round(subtotal * 0.18);
+
+    const discountAmount = subtotal * discount; // ✅ NEW
+    const total = subtotal - discountAmount + shipping + tax;
+
+    document.getElementById('order-subtotal').textContent = `₹${subtotal}`;
+    document.getElementById('order-shipping').textContent = `₹${shipping}`;
+    document.getElementById('order-tax').textContent = `₹${tax}`;
+    document.getElementById('order-total').textContent = `₹${total}`;
+
+    // ✅ SHOW DISCOUNT
+    if (discount > 0) {
+        document.getElementById('discount-row').classList.remove('d-none');
+        document.getElementById('discount-amount').textContent = `-₹${discountAmount}`;
+    }
+
+    orderTotal = total;
+}
+
+
+// PAYMENT UI
+function handlePaymentMethodChange(e) {
+    const cardDetails = document.getElementById('card-details');
+    if (e.target.value === 'CREDIT_CARD' || e.target.value === 'DEBIT_CARD') {
+        cardDetails.style.display = 'block';
+    } else {
+        cardDetails.style.display = 'none';
+    }
+}
+
+
+// CHECKOUT
+async function handleCheckout(e) {
+    e.preventDefault();
+
+    const userId = localStorage.getItem('userId');
+
+    const orderData = {
+        userId: parseInt(userId),
+        totalAmount: orderTotal,
+        shippingAddress: document.getElementById('shippingAddress').value,
+        paymentMethod: document.getElementById('paymentMethod').value
+    };
+
+    try {
+        const response = await fetch(`${API_BASE}/orders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
         });
 
-        // Load order items from cart
-        async function loadOrderItems() {
-            const userId = localStorage.getItem('userId');
-            
-            try {
-                const response = await fetch(`${API_BASE}/cart/user/${userId}`);
-                const data = await response.json();
-                
-                if (data.success && data.cartItems && data.cartItems.length > 0) {
-                    // Get product details for each cart item
-                    const itemsWithDetails = await Promise.all(data.cartItems.map(async (item) => {
-                        try {
-                            const productResponse = await fetch(`${API_BASE}/products/${item.productId}`);
-                            const productData = await productResponse.json();
-                            
-                            if (productData.success) {
-                                return {
-                                    cartId: item.cartId,
-                                    productId: item.productId,
-                                    quantity: item.quantity,
-                                    name: productData.product.name,
-                                    price: productData.product.price,
-                                    imageUrl: productData.product.imageUrl
-                                };
-                            }
-                        } catch (error) {
-                            console.error('Error fetching product details:', error);
-                        }
-                        
-                        return {
-                            cartId: item.cartId,
-                            productId: item.productId,
-                            quantity: item.quantity,
-                            name: `Product ${item.productId}`,
-                            price: 100,
-                            imageUrl: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=400&auto=format&fit=crop'
-                        };
-                    }));
-                    
-                    orderItems = itemsWithDetails;
-                    displayOrderItems();
-                } else {
-                    showEmptyOrder();
-                }
-            } catch (error) {
-                console.error('Error loading cart:', error);
-                // Fallback to localStorage cart
-                const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-                if (localCart.length > 0) {
-                    orderItems = localCart;
-                    displayOrderItems();
-                } else {
-                    showEmptyOrder();
-                }
-            }
-        }
+        const data = await response.json();
 
-        // Display order items
-        function displayOrderItems() {
-            document.getElementById('order-loading').style.display = 'none';
-            document.getElementById('order-items').style.display = 'block';
-            
-            const tbody = document.getElementById('order-items-body');
-            tbody.innerHTML = '';
-            
-            let subtotal = 0;
-            
-            orderItems.forEach(item => {
-                const itemSubtotal = item.price * item.quantity;
-                subtotal += itemSubtotal;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <img src="${item.imageUrl}" alt="${item.name}" class="me-3" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                            <div>
-                                <h6 class="mb-0">${item.name}</h6>
-                            </div>
-                        </div>
-                    </td>
-                    <td>${item.quantity}</td>
-                    <td>₹${typeof item.price === 'number' ? item.price.toLocaleString() : item.price}</td>
-                    <td class="fw-bold">₹${itemSubtotal.toLocaleString()}</td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Calculate totals
-            const shipping = 50;
-            const tax = Math.round(subtotal * 0.18); // 18% GST
-            const total = subtotal + shipping + tax;
-            
-            document.getElementById('order-subtotal').textContent = `₹${subtotal.toLocaleString()}`;
-            document.getElementById('order-shipping').textContent = `₹${shipping.toLocaleString()}`;
-            document.getElementById('order-tax').textContent = `₹${tax.toLocaleString()}`;
-            document.getElementById('order-total').textContent = `₹${total.toLocaleString()}`;
-            
-            orderTotal = total;
-        }
-
-        // Show empty order
-        function showEmptyOrder() {
-            document.getElementById('order-loading').style.display = 'none';
-            document.getElementById('order-empty').style.display = 'block';
-        }
-
-        // Handle payment method change
-        function handlePaymentMethodChange(e) {
-            const cardDetails = document.getElementById('card-details');
-            const paymentMethod = e.target.value;
-            
-            if (paymentMethod === 'CREDIT_CARD' || paymentMethod === 'DEBIT_CARD') {
-                cardDetails.style.display = 'block';
-                // Make card fields required
-                document.getElementById('cardNumber').required = true;
-                document.getElementById('expiryDate').required = true;
-                document.getElementById('cvv').required = true;
-            } else {
-                cardDetails.style.display = 'none';
-                // Remove required from card fields
-                document.getElementById('cardNumber').required = false;
-                document.getElementById('expiryDate').required = false;
-                document.getElementById('cvv').required = false;
-            }
-        }
-
-        // Handle checkout
-        async function handleCheckout(e) {
-            e.preventDefault();
-            
-            if (orderItems.length === 0) {
-                alert('Your cart is empty');
-                return;
-            }
-            
-            const submitBtn = document.getElementById('place-order-btn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
-            submitBtn.disabled = true;
-            
-            try {
-                const userId = localStorage.getItem('userId');
-                
-                // Create order data
-                const orderData = {
-                    userId: parseInt(userId),
-                    totalAmount: orderTotal,
-                    shippingAddress: document.getElementById('shippingAddress').value.trim(),
-                    paymentMethod: document.getElementById('paymentMethod').value,
-                    status: 'PENDING'
-                };
-                
-                // Create order
-                const response = await fetch(`${API_BASE}/orders`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(orderData)
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Clear cart after successful order
-                    await clearCart();
-                    
-                    // Show success modal
-                    document.getElementById('order-id-display').textContent = `#${data.order.orderId}`;
-                    new bootstrap.Modal(document.getElementById('successModal')).show();
-                } else {
-                    throw new Error(data.message || 'Failed to place order');
-                }
-                
-            } catch (error) {
-                console.error('Error placing order:', error);
-                alert('Failed to place order: ' + error.message);
-            } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }
-        }
-
-        // Clear cart after successful order
-        async function clearCart() {
-            const userId = localStorage.getItem('userId');
-            
-            try {
-                // Get all cart items and remove them
-                const cartResponse = await fetch(`${API_BASE}/cart/user/${userId}`);
-                const cartData = await cartResponse.json();
-                
-                if (cartData.success && cartData.cartItems) {
-                    // Remove each item from backend
-                    for (const item of cartData.cartItems) {
-                        await fetch(`${API_BASE}/cart/${item.cartId}`, {
-                            method: 'DELETE'
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error('Error clearing cart:', error);
-            }
-            
-            // Clear local storage cart
+        if (data.success) {
             localStorage.removeItem('cart');
+            document.getElementById('order-id-display').textContent = `#${data.order.orderId}`;
+            new bootstrap.Modal(document.getElementById('successModal')).show();
         }
-    </script>
+    } catch (error) {
+        alert('Order failed');
+    }
+}
+
+
+// CARBON REPORT (same)
+function updateCarbonReport() {
+    let totalCO2 = 0;
+
+    orderItems.forEach(item => {
+        totalCO2 += (10 - (item.ecoScore || 5));
+    });
+
+    document.getElementById('co2-value').textContent = totalCO2.toFixed(2);
+
+    let rating = "Low Impact";
+    let badgeClass = "bg-success";
+
+    if (totalCO2 > 20) {
+        rating = "High Impact";
+        badgeClass = "bg-danger";
+    } else if (totalCO2 > 10) {
+        rating = "Medium Impact";
+        badgeClass = "bg-warning";
+    }
+
+    const ratingEl = document.getElementById('co2-rating');
+    ratingEl.textContent = rating;
+    ratingEl.className = `badge ${badgeClass}`;
+}
+</script>
 
 </body>
 </html>

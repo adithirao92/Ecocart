@@ -73,11 +73,31 @@
                             </thead>
                             <tbody id="users-table-body">
                                 <!-- Users will be loaded here -->
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            <!-- HERE VENDORRRRRRRR -->
+            <div class="card mt-4">
+    <div class="card-header">
+        <h5>Pending Vendor Approvals</h5>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="vendor-approval-table"></tbody>
+        </table>
+    </div>
+</div>
         </div>
 
         <!-- Orders Management Section -->
@@ -166,6 +186,9 @@
                         <div class="mb-3">
                             <label for="productImage" class="form-label">Image URL</label>
                             <input type="url" class="form-control" id="productImage" required>
+                            <div class="mb-3">
+                                <label for="productEco" class="form-label">Eco Score (1-10)</label>
+                                <input type="number" class="form-control" id="productEco" min="1" max="10" required></div>
                         </div>
                         <button type="submit" class="btn btn-custom w-100">Add Product</button>
                     </form>
@@ -225,6 +248,19 @@
         </div>
     </div>
 
+
+    
+
+
+
+
+
+
+
+
+
+
+
     <!-- Success/Error Alerts -->
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
         <div id="alert-container"></div>
@@ -234,13 +270,14 @@
     
     <script>
         // Admin Panel JavaScript with Backend Integration
-        const API_BASE = 'http://localhost:8081/api';
+        const API_BASE = 'http://localhost:8080/api';
 
         // Check authentication
         document.addEventListener('DOMContentLoaded', function() {
             const userRole = localStorage.getItem('userMode');
             const userId = localStorage.getItem('userId');
             const username = localStorage.getItem('username');
+
 
             if (userRole !== 'admin' || !userId) {
                 alert('Access denied. Admin login required.');
@@ -255,6 +292,8 @@
             loadProducts();
             setupTabs();
             setupForms();
+            loadPendingVendors();
+
         });
 
         // Tab functionality
@@ -746,6 +785,48 @@
                  showAlert('Error updating product', 'danger');
              }
          }
+         async function loadPendingVendors() {
+    const adminUserId = localStorage.getItem('userId');
+
+    const response = await fetch(
+        `http://localhost:8080/api/users/admin/pending-vendors?adminUserId=${adminUserId}`
+    );
+
+    const data = await response.json();
+
+    const table = document.getElementById('vendor-approval-table');
+    table.innerHTML = '';
+
+    (data.vendors || []).forEach(vendor => {
+        table.innerHTML += `
+            <tr>
+                <td>${vendor.userId}</td>
+                <td>${vendor.username}</td>
+                <td>${vendor.email}</td>
+                <td>
+                    <button class="btn btn-success btn-sm"
+                        onclick="approveVendor(${vendor.userId})">
+                        Approve
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+async function approveVendor(vendorId) {
+    const adminUserId = localStorage.getItem('userId');
+
+    const response = await fetch(
+        `http://localhost:8080/api/users/admin/approve-vendor/${vendorId}?adminUserId=${adminUserId}`,
+        { method: 'PUT' }
+    );
+
+    if (response.ok) {
+        alert("Vendor Approved!");
+        loadPendingVendors();
+    }
+}
     </script>
 
 </body>

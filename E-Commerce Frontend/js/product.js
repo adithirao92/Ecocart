@@ -83,7 +83,7 @@ async function handleProductSubmission(e) {
         
         if (editId) {
             // Update existing product
-            response = await fetch(`http://13.51.13.143:8080/api/products/${editId}`, {
+            response = await fetch(`http://localhost:8080/api/products/${editId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -171,7 +171,7 @@ function isValidURL(string) {
 
 // Real API call to backend
 async function callBackendAPI(endpoint, data) {
-    const response = await fetch(`http://localhost:8081${endpoint}`, {
+    const response = await fetch(`http://localhost:8080${endpoint}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -205,6 +205,11 @@ function addProductToGrid(product, animate = true) {
     if (targetGrid) {
         const productCard = createProductCard(product);
         targetGrid.appendChild(productCard);
+        setTimeout(() => {
+    if (window.loadReviews) {
+        loadReviews(product.id);
+    }
+}, 100);
         console.log('Product card added to grid');
         
         if (animate) {
@@ -227,6 +232,11 @@ function addProductToGrid(product, animate = true) {
 
 // Create product card HTML
 function createProductCard(product) {
+    const ecoScore = product.ecoScore || Math.floor(Math.random() * 10) + 1;
+
+const ecoClass = ecoScore >= 7 ? 'eco-score-high' 
+               : ecoScore >= 4 ? 'eco-score-mid' 
+               : 'eco-score-low';
     const col = document.createElement('div');
     col.className = 'col product-item';
     col.setAttribute('data-product-id', product.productId || product.id);
@@ -256,20 +266,65 @@ function createProductCard(product) {
         <button class="btn btn-custom btn-sm" onclick="showLoginRequired()">Add to Cart</button>
     `;
     
-    col.innerHTML = `
-        <div class="card product-card h-100">
-            <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}" style="object-fit:cover; width:100%; height:200px;">
-            <div class="card-body p-3">
-                <h6 class="card-title mb-2">${product.name}</h6>
-                <p class="card-text text-muted small mb-2">${product.description}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="product-price fw-bold">₹${typeof product.price === 'number' ? product.price.toLocaleString() : product.price}</span>
-                    ${addToCartButton}
-                </div>
-                ${adminButtons}
-            </div>
+col.innerHTML = `
+<div class="card product-card h-100">
+    <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}" style="object-fit:cover; width:100%; height:200px;">
+    
+    <div class="card-body p-3">
+        <h6 class="card-title mb-2">${product.name}</h6>
+
+        <span class="eco-badge ${ecoClass}">
+            🌿 ${ecoScore}/10
+        </span>
+
+        <p class="card-text text-muted small mb-2">${product.description}</p>
+
+        <div class="d-flex justify-content-between align-items-center">
+    <span class="product-price fw-bold">
+        ₹${typeof product.price === 'number' ? product.price.toLocaleString() : product.price}
+    </span>
+
+    <div style="display:flex; gap:6px;">
+        ${addToCartButton}
+
+        <!-- ❤️ WISHLIST BUTTON -->
+        <button class="btn btn-outline-danger btn-sm"
+            onclick="addToWishlist(${product.productId || product.id})">
+            ❤️
+        </button>
+    </div>
+</div>
+</div>
+
+        ${adminButtons}
+
+        <!-- 🔥 REVIEW SECTION PER PRODUCT -->
+        <div class="mt-3 border-top pt-2">
+            <h6>Reviews</h6>
+
+            <div id="review-list-${product.id}"></div>
+
+            <select id="rating-${product.id}" class="form-select mb-1">
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
+
+            <textarea id="comment-${product.id}" 
+                      class="form-control mb-1"
+                      placeholder="Write review..."></textarea>
+
+            <button class="btn btn-success btn-sm"
+                    onclick="submitReview(${product.id})">
+                Submit
+            </button>
         </div>
-    `;
+
+    </div>
+</div>
+`;
     
     return col;
 }
@@ -285,7 +340,7 @@ function storeProduct(product) {
 async function loadStoredProducts() {
     try {
         // Fetch from backend
-        const response = await fetch('http://13.51.13.143:8080/api/products', {
+        const response = await fetch('http://localhost:8080/api/products', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -306,7 +361,8 @@ async function loadStoredProducts() {
                 price: product.price,
                 category: getCategoryFromId(product.categoryId),
                 code: `PRD${product.productId}`,
-                imageUrl: product.imageUrl || "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=400&auto=format&fit=crop"
+                imageUrl: product.imageUrl || "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=400&auto=format&fit=crop",
+                ecoScore: (product.productId % 10) + 1
             }));
             
             // Display backend products
@@ -344,7 +400,7 @@ function getCategoryFromId(categoryId) {
 // Edit product function
 async function editProduct(productId) {
     try {
-        const response = await fetch(`http://13.51.13.143:8080/api/products/${productId}`);
+        const response = await fetch(`http://localhost:8080/api/products/${productId}`);
         const data = await response.json();
         
         if (data.success) {
@@ -384,7 +440,7 @@ async function deleteProduct(productId) {
     }
     
     try {
-        const response = await fetch(`http://13.51.13.143:8080/api/products/${productId}`, {
+        const response = await fetch(`http://localhost:8080/api/products/${productId}`, {
             method: 'DELETE'
         });
         

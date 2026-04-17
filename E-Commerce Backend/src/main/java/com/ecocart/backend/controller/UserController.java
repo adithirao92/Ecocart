@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.ecocart.backend.service.WishlistService;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -23,11 +24,18 @@ public class UserController {
     private final UserService userService;
     private final ProductService productService;
     private final OrderService orderService;
+    private final WishlistService wishlistService;
 
-    public UserController(UserService userService, ProductService productService, OrderService orderService) {
-        this.userService = userService;
-        this.productService = productService;
-        this.orderService = orderService;
+    public UserController(UserService userService,
+                      ProductService productService,
+                      OrderService orderService,
+                      WishlistService wishlistService) 
+    {
+
+    this.userService = userService;
+    this.productService = productService;
+    this.orderService = orderService;
+    this.wishlistService = wishlistService;
     }
 
     // ==================== CUSTOMER & ADMIN COMMON ENDPOINTS ====================
@@ -131,6 +139,25 @@ public class UserController {
             "userId", savedUser.getUserId()
     ));
 }
+@GetMapping("/admin/pending-vendors")
+public ResponseEntity<Map<String, Object>> getPendingVendors(
+        @RequestParam Long adminUserId) {
+
+    if (!isAdmin(adminUserId)) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("success", false, "message", "Admin access required"));
+    }
+
+    try {
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "vendors", userService.getPendingVendors()
+        ));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("success", false, "message", "Failed to get vendors"));
+    }
+}
 
     // GET USER PROFILE
     @GetMapping("/{userId}")
@@ -153,6 +180,30 @@ public class UserController {
     }
 
     // ==================== ADMIN ONLY ENDPOINTS ====================
+
+    
+
+@PutMapping("/admin/approve-vendor/{vendorId}")
+public ResponseEntity<Map<String, Object>> approveVendor(
+        @PathVariable Long vendorId,
+        @RequestParam Long adminUserId) {
+
+    if (!isAdmin(adminUserId)) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("success", false, "message", "Admin access required"));
+    }
+
+    try {
+        userService.approveVendor(vendorId);
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Vendor approved successfully"
+        ));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("success", false, "message", e.getMessage()));
+    }
+}
 
     // Helper method to verify admin access
     private boolean isAdmin(Long userId) {
@@ -319,21 +370,7 @@ public class UserController {
                     .body(Map.of("success", false, "message", e.getMessage()));
         }
     }
-// vendorrrrrrr
-    @PutMapping("/admin/approve-vendor/{id}")
-    public ResponseEntity<?> approveVendor(@PathVariable Long id) {
 
-    User user = userService.getUserProfile(id);
-
-    if (user.getRole() != User.Role.VENDOR) {
-        return ResponseEntity.badRequest().body("Not a vendor");
-    }
-
-    user.setApproved(true);
-    userService.updateUser(user);
-
-    return ResponseEntity.ok("Vendor approved");
-}
 
     // DELETE USER (Admin Only)
     @DeleteMapping("/admin/delete-user/{userId}")
@@ -354,4 +391,34 @@ public class UserController {
                     .body(Map.of("success", false, "message", e.getMessage()));
         }
     }
+    @PostMapping("/wishlist/add")
+public ResponseEntity<?> addToWishlist(
+        @RequestParam Long userId,
+        @RequestParam Long productId) {
+
+    wishlistService.add(userId, productId);
+    return ResponseEntity.ok(Map.of("success", true));
+}
+
+
+@GetMapping("/wishlist/{userId}")
+public ResponseEntity<?> getWishlist(@PathVariable Long userId) {
+
+    return ResponseEntity.ok(Map.of(
+            "success", true,
+            "products", wishlistService.getByUser(userId)
+    ));
+}
+
+
+
+@DeleteMapping("/wishlist/remove")
+public ResponseEntity<?> removeFromWishlist(
+        @RequestParam Long userId,
+        @RequestParam Long productId) {
+
+    wishlistService.remove(userId, productId);
+    return ResponseEntity.ok(Map.of("success", true));
+}
+
 }

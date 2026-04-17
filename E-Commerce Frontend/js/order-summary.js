@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Display order summary
 function displayOrderSummary() {
+    
     orderItemsContainer.innerHTML = '';
     let total = 0;
     
@@ -90,7 +91,7 @@ async function confirmOrder() {
     };
     
     try {
-        const response = await fetch('http://13.51.13.143:8080/api/orders', {
+        const response = await fetch('http://localhost:8080/api/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -157,7 +158,7 @@ async function proceedToPayment() {
     proceedPaymentBtn.disabled = true;
     
     try {
-        const response = await fetch(`http://13.51.13.143:8080/api/orders/${currentOrderData.orderId}/payment`, {
+        const response = await fetch(`http://localhost:8080/api/orders/${currentOrderData.orderId}/payment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

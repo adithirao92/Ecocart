@@ -10,11 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "users")
 public class User {
 
-    public enum Role 
-    {
-    CUSTOMER,
-    ADMIN,
-    VENDOR
+    public enum Role {
+        CUSTOMER, VENDOR, ADMIN
     }
 
     @Id
@@ -40,12 +37,9 @@ public class User {
     @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
     private String email;
-
+    
     @Column(nullable = false)
     private boolean approved = true;
-
-    public boolean isApproved() { return approved; }
-    public void setApproved(boolean approved) { this.approved = approved; } 
 
     // Constructors
     public User() {}
@@ -55,6 +49,13 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role != null ? role : Role.CUSTOMER;
+
+        // Vendors need approval
+        if (this.role == Role.VENDOR) {
+            this.approved = false;
+        } else {
+            this.approved = true;
+        }
     }
 
     // Getters and Setters
@@ -72,4 +73,7 @@ public class User {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public boolean isApproved() { return approved; }
+    public void setApproved(boolean approved) { this.approved = approved; } 
 }

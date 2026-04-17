@@ -4,16 +4,63 @@
 ============================================
 */
 :root {
-    --primary-bg: #fff;           /* Pure white background */
-    --secondary-bg: #f1f3f6;      /* Light blue-gray */
-    --primary-blue: #2874f0;      /* Flipkart blue */
-    --primary-orange: #ff6161;    /* Flipkart orange */
-    --dark-blue: #1e3a8a;         /* Dark blue */
-    --text-primary: #212121;      /* Dark gray text */
-    --text-secondary: #878787;    /* Light gray text */
-    --success-green: #388e3c;     /* Success green */
-    --border-light: #e0e0e0;      /* Light border */
+    --primary: #2e7d32;
+    --primary-light: #4caf50;
+    --primary-dark: #1b5e20;
+    --accent: #8bc34a;
+    --eco-badge: #00897b;
+
+    /* ✅ ADD THESE */
+    --primary-bg: #ffffff;
+    --secondary-bg: #f1f3f6;
+    --primary-blue: #2874f0;
+    --primary-orange: #ff6161;
+    --dark-blue: #1e3a8a;
+    --text-primary: #212121;
+    --border-light: #e0e0e0;
+    --hover-active: #222222;
+    --success-green: #2e7d32;
 }
+/* Add eco-score badge styles */
+
+.eco-badge {
+
+    background-color: var(--eco-badge);
+
+    color: white;
+
+    border-radius: 12px;
+
+    padding: 2px 10px;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+
+}
+
+.eco-score-high  { background: #2e7d32; }
+
+.eco-score-mid   { background: #f9a825; }
+
+.eco-score-low   { background: #c62828; }
+
+/* Carbon report card */
+
+.carbon-card {
+
+    border-left: 4px solid var(--primary);
+
+    background: #f1f8e9;
+
+    padding: 1rem;
+
+    border-radius: 8px;
+
+    margin-top: 1rem;
+
+}
+
 
 body {
     background-color: var(--secondary-bg);
