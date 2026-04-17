@@ -280,11 +280,21 @@ col.innerHTML = `
         <p class="card-text text-muted small mb-2">${product.description}</p>
 
         <div class="d-flex justify-content-between align-items-center">
-            <span class="product-price fw-bold">
-                ₹${typeof product.price === 'number' ? product.price.toLocaleString() : product.price}
-            </span>
-            ${addToCartButton}
-        </div>
+    <span class="product-price fw-bold">
+        ₹${typeof product.price === 'number' ? product.price.toLocaleString() : product.price}
+    </span>
+
+    <div style="display:flex; gap:6px;">
+        ${addToCartButton}
+
+        <!-- ❤️ WISHLIST BUTTON -->
+        <button class="btn btn-outline-danger btn-sm"
+            onclick="addToWishlist(${product.productId || product.id})">
+            ❤️
+        </button>
+    </div>
+</div>
+</div>
 
         ${adminButtons}
 

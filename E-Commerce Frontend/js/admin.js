@@ -50,6 +50,7 @@ const editUserForm = document.getElementById('edit-user-form');
 document.addEventListener('DOMContentLoaded', function() {
     loadProducts();
     setupTabs();
+    loadPendingVendors();
 });
 
 // Tab functionality
@@ -148,6 +149,7 @@ async function loadUsers() {
         displayUsers(demoUsers);
     } finally {
         showLoading(false);
+        loadPendingVendors();
     }
 }
 
@@ -218,6 +220,7 @@ addProductForm.addEventListener('submit', function(e) {
         categoryId: parseInt(document.getElementById('productCategory').value),
         stockQuantity: parseInt(document.getElementById('productStock').value) || 100,
         imageUrl : document.getElementById('productImage').value || ""
+        ,ecoScore: parseInt(document.getElementById('productEco').value)
     };
     
     // Validate required fields
@@ -720,4 +723,50 @@ function showAlert(message, type) {
             alert.remove();
         }
     }, 3000);
+}
+
+
+async function loadPendingVendors() {
+    const adminUserId = localStorage.getItem('userId');
+
+    const response = await fetch(
+        `http://localhost:8080/api/users/admin/pending-vendors?adminUserId=${adminUserId}`
+    );
+
+    const data = await response.json();
+
+    const table = document.getElementById('vendor-approval-table');
+    if (!table) return;
+
+    table.innerHTML = '';
+
+    (data.vendors || []).forEach(vendor => {
+        table.innerHTML += `
+            <tr>
+                <td>${vendor.userId}</td>
+                <td>${vendor.username}</td>
+                <td>${vendor.email}</td>
+                <td>
+                    <button class="btn btn-success btn-sm"
+                        onclick="approveVendor(${vendor.userId})">
+                        Approve
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+async function approveVendor(vendorId) {
+    const adminUserId = localStorage.getItem('userId');
+
+    const response = await fetch(
+        `http://localhost:8080/api/users/admin/approve-vendor/${vendorId}?adminUserId=${adminUserId}`,
+        { method: 'PUT' }
+    );
+
+    if (response.ok) {
+        alert("Vendor Approved!");
+        loadPendingVendors();
+    }
 }

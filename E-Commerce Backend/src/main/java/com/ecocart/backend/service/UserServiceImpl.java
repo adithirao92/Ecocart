@@ -57,6 +57,12 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(user.getPassword());
         user.setRole(user.getRole() != null ? user.getRole() : User.Role.CUSTOMER);
+        if (user.getRole() == User.Role.VENDOR) {
+            user.setApproved(false); // 🔥 THIS FIXES EVERYTHING
+             } 
+             else {
+                user.setApproved(true);
+}
 
         return userRepository.save(user);
     }

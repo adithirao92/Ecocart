@@ -49,13 +49,20 @@ if (loginForm) {
             if (data.success) {
                 Object.entries({
                     userId: data.userId,
-                    userMode: data.isAdmin ? 'admin' : 'customer',
+                    userMode: data.role.toLowerCase(),
                     userEmail: data.email,
                     username: data.username,
                     userToken: `logged-in-${data.userId}`
                 }).forEach(([key, value]) => localStorage.setItem(key, value));
                 
-                window.location.href = data.isAdmin ? 'admin.html' : 'customer.html';
+                if (data.role === 'ADMIN') {
+                    window.location.href = 'admin.html';
+                } 
+                else if (data.role === 'VENDOR') {
+                    window.location.href = 'vendor.html';
+                } else {
+                    window.location.href = 'customer.html';
+                }
             } else {
                 showError(errorDiv, data.message || 'Invalid email or password.');
             }
@@ -185,7 +192,76 @@ if (adminRegisterForm) {
             showError(successDiv, getErrorMessage(error));
         }
     });
+    // VENDOR REGISTER FORM
+const vendorRegisterForm = document.getElementById('vendor-register-form');
+
+if (vendorRegisterForm) {
+    vendorRegisterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('vendorRegisterName').value.trim();
+        const email = document.getElementById('vendorRegisterEmail').value.trim();
+        const password = document.getElementById('vendorRegisterPassword').value.trim();
+
+        const successDiv = document.getElementById('vendor-register-success');
+        successDiv.classList.add('d-none');
+
+        if (!name || !email || !password) {
+            successDiv.classList.remove('alert-success');
+            successDiv.classList.add('alert-danger');
+            return showError(successDiv, 'Please fill all fields.');
+        }
+
+        if (password.length < 6) {
+            successDiv.classList.remove('alert-success');
+            successDiv.classList.add('alert-danger');
+            return showError(successDiv, 'Password must be at least 6 characters.');
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/users/register/vendor`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: "VENDOR"
+
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                successDiv.textContent = 'Vendor registered! Waiting for admin approval.';
+                successDiv.classList.remove('d-none', 'alert-danger');
+                successDiv.classList.add('alert-success');
+                vendorRegisterForm.reset();
+            } else {
+                successDiv.classList.remove('alert-success');
+                successDiv.classList.add('alert-danger');
+                showError(successDiv, data.message || 'Registration failed.');
+            }
+
+        } catch (error) {
+            console.error('Vendor registration error:', error);
+            successDiv.classList.remove('alert-success');
+            successDiv.classList.add('alert-danger');
+            showError(successDiv, getErrorMessage(error));
+        }
+    });
 }
+}
+
+
+
+
+
+
+
+
+
 
 // SEARCH FUNCTIONALITY
 const searchBar = document.getElementById('search-bar');
@@ -276,4 +352,36 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         loadReviews(1); // using test product ID
     }, 1000);
+
+
+// ================= WISHLIST =================
+
+window.addToWishlist = async function(productId) {
+
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+        alert("Login first!");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `http://localhost:8080/api/users/wishlist/add?userId=${userId}&productId=${productId}`,
+            {
+                method: "POST"
+            }
+        );
+
+        if (response.ok) {
+            alert("Added to wishlist ❤️");
+        } else {
+            alert("Failed to add ❌");
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Error adding to wishlist");
+    }
+};
 });
