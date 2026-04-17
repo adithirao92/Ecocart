@@ -137,7 +137,7 @@
                             </div>
 
                             <!-- 🌍 Carbon Footprint Report -->
-<div class="carbon-card mt-3 p-3 border rounded" id="carbon-report">
+<!-- <div class="carbon-card mt-3 p-3 border rounded" id="carbon-report">
 
     <h6>🌍 Carbon Footprint Report</h6>
 
@@ -147,7 +147,7 @@
 
     <small>Choose Eco shipping at checkout to reduce your footprint!</small>
 
-</div>
+</div> -->
 <div class="input-group mb-3 mt-3">
     <input type="text" id="promo-input" class="form-control" placeholder="Enter Promo Code (e.g., ECO10)">
     <button type="button" class="btn btn-outline-success" onclick="applyPromo()">Apply</button>
@@ -177,10 +177,35 @@
                                     <span id="order-total" class="text-success">₹0.00</span>
                                 </div>
                             </div>
+                            <div class="card p-3 mb-3 shadow-sm">
+  <h5>🚚 Shipping Details</h5>
 
-                            <button type="submit" class="btn btn-success w-100" id="place-order-btn">
+  <label class="form-label mt-2 fw-bold">Delivery Distance</label>
+  <select id="delivery-distance" class="form-select mb-2">
+    <option value="15">Local Delivery (15 km)</option>
+    <option value="150">Inter-city (150 km)</option>
+    <option value="800">Inter-state (800 km)</option>
+  </select>
+
+  <label class="form-label mt-2 fw-bold">Shipping Method</label>
+  <select id="shipping-method" class="form-select mb-3">
+    <option value="ECO">🌿 Eco-Friendly</option>
+    <option value="STANDARD">📦 Standard</option>
+    <option value="EXPRESS">✈️ Express</option>
+  </select>
+
+  <button class="btn btn-success w-100 fw-bold" onclick="confirmOrder()">
+    Place Order & Calculate Impact
+  </button>
+</div>
+
+<div id="carbon-report-card" class="card p-3 mt-3 border-success d-none bg-light">
+  <h5 class="text-success">🌱 Your Environmental Impact</h5>
+  <p id="carbon-text"></p>
+</div>
+                            <!-- <button type="submit" class="btn btn-success w-100" id="place-order-btn">
                                 <i class="bi bi-check-circle me-2"></i>Place Order
-                            </button>
+                            </button> -->
                         </form>
                     </div>
                 </div>
@@ -235,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadOrderItems();
 
-    document.getElementById('checkout-form').addEventListener('submit', handleCheckout);
+    // document.getElementById('checkout-form').addEventListener('submit', handleCheckout);
     document.getElementById('paymentMethod').addEventListener('change', handlePaymentMethodChange);
 });
 
@@ -338,7 +363,7 @@ function displayOrderItems() {
         tbody.appendChild(row);
     });
 
-    updateCarbonReport();
+    // updateCarbonReport();
 
     const shipping = 50;
     const tax = Math.round(subtotal * 0.18);
@@ -406,31 +431,31 @@ async function handleCheckout(e) {
 
 
 // CARBON REPORT (same)
-function updateCarbonReport() {
-    let totalCO2 = 0;
+// function updateCarbonReport() {
+//     let totalCO2 = 0;
 
-    orderItems.forEach(item => {
-        totalCO2 += (10 - (item.ecoScore || 5));
-    });
+//     orderItems.forEach(item => {
+//         totalCO2 += (10 - (item.ecoScore || 5));
+//     });
 
-    document.getElementById('co2-value').textContent = totalCO2.toFixed(2);
+//     document.getElementById('co2-value').textContent = totalCO2.toFixed(2);
 
-    let rating = "Low Impact";
-    let badgeClass = "bg-success";
+//     let rating = "Low Impact";
+//     let badgeClass = "bg-success";
 
-    if (totalCO2 > 20) {
-        rating = "High Impact";
-        badgeClass = "bg-danger";
-    } else if (totalCO2 > 10) {
-        rating = "Medium Impact";
-        badgeClass = "bg-warning";
-    }
+//     if (totalCO2 > 20) {
+//         rating = "High Impact";
+//         badgeClass = "bg-danger";
+//     } else if (totalCO2 > 10) {
+//         rating = "Medium Impact";
+//         badgeClass = "bg-warning";
+//     }
 
-    const ratingEl = document.getElementById('co2-rating');
-    ratingEl.textContent = rating;
-    ratingEl.className = `badge ${badgeClass}`;
-}
+//     const ratingEl = document.getElementById('co2-rating');
+//     ratingEl.textContent = rating;
+//     ratingEl.className = `badge ${badgeClass}`;
+// }
 </script>
-
+<script src="js/order-summary.js"></script>
 </body>
 </html>

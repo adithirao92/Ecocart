@@ -325,7 +325,7 @@ window.submitReview = async function(productId) {
         productId: productId,
         score: parseInt(score),
         comment: comment,
-        customerId: 1
+        customerId: 1 // Test user ID
     };
 
     try {
@@ -336,9 +336,13 @@ window.submitReview = async function(productId) {
         });
 
         if (response.ok) {
-            alert("Review added!");
+            alert("Review added! Refreshing to update product rating...");
             document.getElementById(`comment-${productId}`).value = '';
-            loadReviews(productId);
+            
+            // 🔥 THE FIX: Reload the page so it fetches the new math!
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         }
 
     } catch (error) {
@@ -346,18 +350,16 @@ window.submitReview = async function(productId) {
     }
 };
 
-
 // Auto load reviews when page loads
 document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         loadReviews(1); // using test product ID
     }, 1000);
+}); // 🔥 FIXED BRACKETS HERE!
 
 
 // ================= WISHLIST =================
-
 window.addToWishlist = async function(productId) {
-
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
@@ -368,9 +370,7 @@ window.addToWishlist = async function(productId) {
     try {
         const response = await fetch(
             `http://localhost:8080/api/users/wishlist/add?userId=${userId}&productId=${productId}`,
-            {
-                method: "POST"
-            }
+            { method: "POST" }
         );
 
         if (response.ok) {
@@ -384,4 +384,32 @@ window.addToWishlist = async function(productId) {
         alert("Error adding to wishlist");
     }
 };
-});
+
+// ================= AVERAGE RATING (OBSERVER PATTERN UI) =================
+// Utility function to generate visual stars based on the backend math
+window.generateStarRating = function(averageRating, totalReviews) {
+    let starsHtml = '';
+    
+    // Safely handle null/undefined values for new products
+    const safeRating = averageRating || 0;
+    const safeTotal = totalReviews || 0;
+    const roundedRating = Math.round(safeRating);
+
+    // Generate 5 stars (filled yellow or empty gray)
+    for (let i = 1; i <= 5; i++) {
+        if (i <= roundedRating) {
+            starsHtml += '<i class="bi bi-star-fill text-warning"></i> ';
+        } else {
+            starsHtml += '<i class="bi bi-star text-secondary"></i> ';
+        }
+    }
+    
+    return `
+        <div class="product-rating mt-2 mb-2">
+            ${starsHtml}
+            <span class="ms-1 text-muted small">
+                (${safeRating.toFixed(1)}/5 from ${safeTotal} reviews)
+            </span>
+        </div>
+    `;
+};

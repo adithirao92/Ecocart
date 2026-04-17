@@ -15,6 +15,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
+        // For creating a NEW product, Spring Boot automatically grabs the URL from the JSON
+        // because we added the getter/setter to Product.java earlier!
         return productRepository.save(product);
     }
 
@@ -22,11 +24,16 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long productId, Product product) {
         Product existing = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+        
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
         existing.setCategoryId(product.getCategoryId());
         existing.setStockQuantity(product.getStockQuantity());
+        
+        // 🔥 HERE IS THE MAGIC LINE THAT WAS MISSING!
+        existing.setImageUrl(product.getImageUrl()); 
+
         return productRepository.save(existing);
     }
 

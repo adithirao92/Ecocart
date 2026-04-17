@@ -109,17 +109,36 @@ public Map<String, Object> checkout(Long userId, Map<String, Object> payload) {
 
     // STEP 4: Carbon calculation
     // double co2 = carbonCalculator.calculate("STANDARD", 2.0, 10.0);
-    var report = carbonCalculator.calculate(savedOrder.getOrderId(), "STANDARD", 2.0, 10.0);
+    // var report = carbonCalculator.calculate(savedOrder.getOrderId(), "STANDARD", 2.0, 10.0);
+    // Extract values from frontend payload
+String shippingType = (String) payload.getOrDefault("shippingType", "STANDARD");
+
+double distance = Double.parseDouble(
+        payload.getOrDefault("distance", "10.0").toString()
+);
+
+double weight = Double.parseDouble(
+        payload.getOrDefault("weight", "1.0").toString()
+);
+
+// Pass dynamic values into Strategy Pattern
+var report = carbonCalculator.calculate(
+        savedOrder.getOrderId(),
+        shippingType,
+        weight,
+        distance
+);
     double co2 = report.getEstimatedCO2();
 
     return Map.of(
-            "success", true,
-            "message", "Checkout + Payment successful",
-            "orderId", savedOrder.getOrderId(),
-            "total", totalAmount,
-            "carbonEmission", co2,
-            "status", savedOrder.getStatus()
-    );
+        "success", true,
+        "message", "Checkout + Payment successful",
+        "orderId", savedOrder.getOrderId(),
+        "total", totalAmount,
+        "carbonFootprint", report.getEstimatedCO2(),
+        "sustainabilityMessage", report.getRating(),
+        "status", savedOrder.getStatus()
+);
 
     
 }

@@ -4,9 +4,9 @@
 let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
 // DOM elements
-const orderItemsContainer = document.getElementById('order-items');
+const orderItemsContainer = document.getElementById('order-items-body');
 const orderTotalElement = document.getElementById('order-total');
-const confirmOrderBtn = document.getElementById('confirm-order-btn');
+// const confirmOrderBtn = document.getElementById('confirm-order-btn');
 const proceedPaymentBtn = document.getElementById('proceed-payment-btn');
 const orderSummarySection = document.getElementById('order-summary-section');
 const orderConfirmedSection = document.getElementById('order-confirmed-section');
@@ -63,13 +63,15 @@ function displayOrderSummary() {
 
 // Setup event listeners
 function setupEventListeners() {
-    confirmOrderBtn.addEventListener('click', confirmOrder);
+    // confirmOrderBtn.addEventListener('click', confirmOrder);
+   if (proceedPaymentBtn) {
     proceedPaymentBtn.addEventListener('click', proceedToPayment);
+}
 }
 
 // Confirm order
 async function confirmOrder() {
-    const userId = localStorage.getItem('userId');
+    const userId = Number(localStorage.getItem('userId'));
     if (!userId) {
         alert('Please login to place order');
         window.location.href = 'index.html';
@@ -77,8 +79,11 @@ async function confirmOrder() {
     }
     
     // Show loading state
-    confirmOrderBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
-    confirmOrderBtn.disabled = true;
+    const btn = document.querySelector('button[onclick="confirmOrder()"]');
+if (btn) {
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    btn.disabled = true;
+}
     
     const orderData = {
         userId: parseInt(userId),
@@ -101,7 +106,7 @@ async function confirmOrder() {
         
         if (response.ok) {
             const result = await response.json();
-            showOrderConfirmed(result);
+            await handleCheckoutWithCarbon(result);
         } else {
             throw new Error('Failed to create order');
         }
@@ -116,42 +121,82 @@ async function confirmOrder() {
             orderStatus: 'PENDING',
             paymentStatus: 'PENDING'
         };
-        showOrderConfirmed(demoResult);
+        await handleCheckoutWithCarbon(demoResult);
     }
 }
+async function handleCheckoutWithCarbon(orderResult) {
+    const shippingType = document.getElementById('shipping-method').value;
+    const distance = parseFloat(document.getElementById('delivery-distance').value);
 
+    const payload = {
+        // userId: orderResult.userId,
+        shippingType,
+        distance,
+        weight: 2.5
+    };
+
+    try {
+        const userId = localStorage.getItem('userId');
+
+        const response = await fetch(`http://localhost:8080/api/orders/checkout?userId=${Number(userId)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        showOrderConfirmed(orderResult);
+        displayCarbonResult(result, shippingType, distance);
+
+    } catch (error) {
+        console.error("Checkout Error:", error);
+        showOrderConfirmed(orderResult);
+    }
+}
+function displayCarbonResult(result, shippingType, distance) {
+    // 1. Grab the Order ID element inside the Modal
+    const orderIdDiv = document.getElementById('order-id-display').parentNode;
+
+    // 2. Create a new box for the Carbon Report if it doesn't exist yet
+    let carbonDiv = document.getElementById('modal-carbon-report');
+    if (!carbonDiv) {
+        carbonDiv = document.createElement('div');
+        carbonDiv.id = 'modal-carbon-report';
+        carbonDiv.className = 'alert alert-success mt-3 text-start shadow-sm';
+        
+        // Insert it right after the Order ID in the modal
+        orderIdDiv.parentNode.insertBefore(carbonDiv, orderIdDiv.nextSibling);
+    }
+
+    // 3. Fill it with the data from Aashika SG's backend!
+    // (Added fallbacks just in case the backend payload misses a key)
+    carbonDiv.innerHTML = `
+        <h5 class="alert-heading text-success mb-2">🌱 Environmental Impact</h5>
+        <strong>Shipping Method:</strong> ${shippingType} (${distance} km) <br>
+        <strong>CO2 Emitted:</strong> ${result.carbonFootprint || 'Calculated dynamically'} kg <br>
+        <hr class="my-2">
+        <small><em>${result.sustainabilityMessage || 'Thank you for shopping sustainably with EcoCart!'}</em></small>
+    `;
+}
 // Show order confirmed
+// Show order confirmed using the Bootstrap Modal!
 function showOrderConfirmed(orderResult) {
     currentOrderData = orderResult;
     
-    // Hide order summary and show confirmed section
-    orderSummarySection.classList.add('d-none');
-    orderConfirmedSection.classList.remove('d-none');
-    
-    // Populate order details
-    document.getElementById('confirmed-user-id').textContent = orderResult.userId;
-    document.getElementById('confirmed-order-id').textContent = orderResult.orderId;
-    document.getElementById('confirmed-total-amount').textContent = `₹${orderResult.totalAmount.toLocaleString()}`;
-    document.getElementById('confirmed-order-date').textContent = new Date(orderResult.orderDate).toLocaleDateString();
-    document.getElementById('confirmed-order-status').innerHTML = `<span class="badge bg-warning">${orderResult.orderStatus}</span>`;
-    document.getElementById('confirmed-payment-status').innerHTML = `<span class="badge bg-warning">${orderResult.paymentStatus}</span>`;
-    
-    // Show order items summary
-    const confirmedItemsContainer = document.getElementById('confirmed-order-items');
-    confirmedItemsContainer.innerHTML = '';
-    cartItems.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'mb-2 pb-2 border-bottom';
-        itemDiv.innerHTML = `
-            <div class="d-flex justify-content-between">
-                <span>${item.name}</span>
-                <span>x${item.quantity}</span>
-            </div>
-        `;
-        confirmedItemsContainer.appendChild(itemDiv);
-    });
-}
+    // 1. Put the new Order ID into the modal
+    const orderIdEl = document.getElementById('order-id-display');
+    if (orderIdEl && orderResult.orderId) {
+        orderIdEl.textContent = '#' + orderResult.orderId;
+    }
 
+    // 2. Clear the cart so it's empty for the next order
+    localStorage.removeItem('cart');
+
+    // 3. Trigger the Bootstrap Success Modal to pop up on screen!
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+}
 // Proceed to payment
 async function proceedToPayment() {
     proceedPaymentBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing Payment...';

@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
-
+// @CrossOrigin(originPatterns = "*")
 public class OrderController {
 
     private final OrderService orderService;
@@ -33,32 +33,33 @@ public class OrderController {
                     .body(Map.of("success", false, "message", e.getMessage()));
         }
     }
+    
+    // THE FIX: Wrapped all the logic cleanly inside the method!
+    @PostMapping("/checkout")
+    public ResponseEntity<?> checkout(
+            @RequestParam Long userId,
+            @RequestBody Map<String, Object> payload) {
 
-    @PostMapping("/checkout/{userId}")
-public ResponseEntity<Map<String, Object>> checkout(
-        @PathVariable Long userId,
-        @RequestBody Map<String, Object> payload) {
+        try {
+            // STEP 1: (Later) get cart items
+            // STEP 2: validate stock
+            // STEP 3: apply promo if exists
+            // STEP 4: create order
+            // STEP 5: process payment
+            // STEP 6: generate carbon report
+            // STEP 7: clear cart
 
-    try {
-        // STEP 1: (Later) get cart items
-        // STEP 2: validate stock
-        // STEP 3: apply promo if exists
-        // STEP 4: create order
-        // STEP 5: process payment
-        // STEP 6: generate carbon report
-        // STEP 7: clear cart
+            Map<String, Object> result = orderService.checkout(userId, payload);
+            return ResponseEntity.ok(result);
 
-        Map<String, Object> result = orderService.checkout(userId, payload);
-return ResponseEntity.ok(result);
-
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of(
-                        "success", false,
-                        "message", e.getMessage()
-                ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of(
+                            "success", false,
+                            "message", e.getMessage()
+                    ));
+        }
     }
-}
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Map<String, Object>> getOrderDetails(@PathVariable Long orderId) {
